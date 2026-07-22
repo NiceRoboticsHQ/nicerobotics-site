@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nice Robotics — The swarm that’s always up.</title>
+<meta name="description" content="Autonomous drone swarms that keep critical sites covered around the clock — no gaps, no pilots.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Nice Robotics">
+<meta property="og:title" content="Nice Robotics — The swarm that’s always up.">
+<meta property="og:description" content="Autonomous drone swarms that keep critical sites covered around the clock — no gaps, no pilots.">
+<meta property="og:url" content="https://nicerobotics.ai/">
+<meta property="og:image" content="https://nicerobotics.ai/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Nice Robotics — The swarm that’s always up.">
+<meta name="twitter:description" content="Autonomous drone swarms that keep critical sites covered around the clock — no gaps, no pilots.">
+<meta name="twitter:image" content="https://nicerobotics.ai/assets/og.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root{
+    --bg:#0a0a0c; --bg-2:#101013; --card:#0f0f12; --line:#1f1f25; --line-soft:#17171c;
+    --text:#f4f3ef; --muted:#8a8a93; --dim:#4a4a52;
+    --accent:#4dc3ff; --accent-soft:rgba(77,195,255,.10); --accent-line:rgba(77,195,255,.4);
+    --maxw:1180px; --pad:clamp(20px, 5vw, 48px);
+  }
+  html{ scroll-behavior:smooth; }
+  body{ background:var(--bg); color:var(--text); font-family:'Space Grotesk',sans-serif; }
+  .mono{ font-family:'Space Mono',monospace; }
+  a{ color:inherit; text-decoration:none; }
+  img{ display:block; max-width:100%; }
+
+  header{
+    position:sticky; top:0; z-index:10; background:rgba(10,10,12,.88); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .hdr-in{ max-width:var(--maxw); margin:0 auto; padding:18px var(--pad); display:flex; align-items:center; justify-content:space-between; }
+  .brand{ font-family:'Space Mono',monospace; font-weight:700; font-size:13px; letter-spacing:4px; }
+  .brand .dot{ color:var(--accent); margin-right:8px; }
+  .hdr-link{ font-family:'Space Mono',monospace; font-size:12px; letter-spacing:2px; color:var(--muted); }
+  .hdr-link:hover{ color:var(--accent); }
+
+  section{ border-bottom:1px solid var(--line-soft); }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:clamp(72px,12vh,140px) var(--pad); }
+  .eyebrow{ font-family:'Space Mono',monospace; font-size:13px; font-weight:700; letter-spacing:5px; color:var(--accent); text-transform:uppercase; margin-bottom:24px; }
+  h1,h2{ font-weight:700; letter-spacing:-1px; line-height:1.08; }
+  h1{ font-size:clamp(34px,5.4vw,72px); }
+  h2{ font-size:clamp(30px,4.6vw,60px); }
+  .a{ color:var(--accent); }
+  .body{ font-size:clamp(16px,1.6vw,21px); line-height:1.6; color:var(--muted); }
+
+  /* Hero */
+  .hero{ background:#000; text-align:center; }
+  .hero .wrap{ display:flex; flex-direction:column; align-items:center; padding-top:clamp(60px,10vh,110px); }
+  .hero img{ width:min(540px,82%); margin:clamp(28px,5vh,48px) 0 clamp(24px,4vh,40px); }
+  .hero .tag{ font-size:clamp(22px,3.2vw,38px); font-weight:700; margin-top:8px; }
+  .hero .sub{ margin-top:16px; max-width:640px; }
+  .hero .meta{ margin-top:clamp(40px,7vh,72px); display:flex; gap:28px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:3px; color:var(--dim); }
+  .hero .meta .live{ color:var(--accent); }
+
+  /* Problem */
+  .cols{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(36px,5vw,80px); align-items:start; }
+  @media (max-width:840px){ .cols{ grid-template-columns:1fr; } }
+  .prob-row{ border-top:1px solid var(--line); padding:28px 0; display:flex; gap:24px; }
+  .prob-row:last-child{ border-bottom:1px solid var(--line); }
+  .num{ font-family:'Space Mono',monospace; color:var(--accent); font-size:13px; letter-spacing:2px; padding-top:6px; }
+  .prob-row h3{ font-size:clamp(19px,2vw,24px); margin-bottom:8px; }
+  .prob-row .body{ font-size:clamp(15px,1.5vw,18px); }
+
+  /* Approach cards */
+  .cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:clamp(40px,6vh,64px); }
+  @media (max-width:840px){ .cards{ grid-template-columns:1fr; } }
+  .card{ background:var(--card); border:1px solid var(--line); padding:28px; }
+  .card.hot{ border-color:var(--accent-line); background:linear-gradient(135deg, var(--accent-soft), var(--card) 55%); }
+  .card .k{ font-family:'Space Mono',monospace; font-size:11px; letter-spacing:3px; color:var(--muted); text-transform:uppercase; margin-bottom:14px; }
+  .card.hot .k{ color:var(--accent); }
+  .card h3{ font-size:clamp(18px,1.9vw,22px); margin-bottom:10px; }
+  .card .body{ font-size:clamp(14px,1.4vw,17px); }
+
+  /* Product */
+  .shots{ display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:clamp(36px,6vh,56px); }
+  @media (max-width:840px){ .shots{ grid-template-columns:1fr; } }
+  .shot{ border:1px solid var(--line); background:var(--bg-2); }
+  .caption{ font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--muted); }
+  .shot .caption{ display:block; padding:14px 16px; }
+  .privacy{ border:1px solid var(--line); margin-top:32px; padding:16px 20px; display:inline-block; }
+  .src-note{ margin-top:20px; text-align:center; }
+
+  /* Close */
+  .close{ background:#000; text-align:center; }
+  .close .wrap{ display:flex; flex-direction:column; align-items:center; }
+  .nice{ font-family:'Space Mono',monospace; font-size:clamp(12px,1.4vw,15px); letter-spacing:4px; color:var(--muted); margin-bottom:36px; }
+  .cta{ margin-top:clamp(36px,6vh,56px); border:1px solid var(--accent-line); background:var(--accent-soft); padding:18px 32px; font-family:'Space Mono',monospace; font-size:clamp(13px,1.5vw,16px); letter-spacing:2px; transition:background .2s; }
+  .cta:hover{ background:rgba(77,195,255,.18); }
+
+  footer{ padding:28px var(--pad); display:flex; justify-content:space-between; max-width:var(--maxw); margin:0 auto; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:3px; color:var(--dim); flex-wrap:wrap; gap:12px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-in">
+    <span class="brand"><span class="dot">◆</span>NICE ROBOTICS</span>
+    <a class="hdr-link" href="mailto:founders@nicerobotics.ai">founders@nicerobotics.ai</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Persistent autonomous aerial awareness</div>
+    <img src="assets/nice-robotics-logo.png" alt="Nice Robotics">
+    <div class="tag">The swarm that’s always up.</div>
+    <div class="body sub">Autonomous drone swarms that keep critical sites covered around the clock — no gaps, no pilots.</div>
+    <div class="meta"><span>EST. 2026</span><span><span class="live">●</span>&nbsp;UNITED STATES</span></div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section>
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <div class="eyebrow">The problem</div>
+        <h2>Critical sites run around the clock. <span class="a">Their security doesn’t.</span></h2>
+        <div class="body" style="margin-top:24px;">Fixed cameras have blind spots by design. Guard patrols leave hours-long windows between rounds. Reactive drones launch only after something else detects — and while they charge, coverage is zero.</div>
+      </div>
+      <div>
+        <div class="prob-row"><span class="num">01</span>
+          <div><h3>Fixed cameras</h3><div class="body">A fixed view of a moving world.</div></div></div>
+        <div class="prob-row"><span class="num">02</span>
+          <div><h3>Guard patrols</h3><div class="body">Hard to staff, harder to keep — and every loop leaves a blind window.</div></div></div>
+        <div class="prob-row"><span class="num">03</span>
+          <div><h3>Reactive drones</h3><div class="body">Launch-on-alert inherits every blind spot of the system that triggers it.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPROACH -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The approach</div>
+    <h2>A swarm that <span class="a">never comes down.</span></h2>
+    <div class="body" style="margin-top:24px; max-width:900px;">Small autonomous aircraft rotate on a hot-swap cycle — a replacement is on station before the active unit descends. Every feed fuses into one live, geolocated picture of the site. Coverage never drops.</div>
+    <div class="cards">
+      <div class="card">
+        <div class="k">Always airborne</div>
+        <h3>Zero-gap coverage</h3>
+        <div class="body">Overlapping rotation means coverage never pauses — not for charging, not for shift changes.</div>
+      </div>
+      <div class="card">
+        <div class="k">One picture</div>
+        <h3>Answers, not feeds</h3>
+        <div class="body">Detections are fused, classified, and filtered — the operator sees what matters, not a wall of video.</div>
+      </div>
+      <div class="card hot">
+        <div class="k">Human in the loop</div>
+        <h3>A human makes every call</h3>
+        <div class="body">No facial recognition. No interception. Software surfaces events; people decide.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The product</div>
+    <h2>The framework <span class="a">exists today.</span></h2>
+    <div class="body" style="margin-top:24px; max-width:760px;">Our operator console runs today, replaying real drone data end to end — every object detected, classified, and tracked into one live picture a single operator can act on.</div>
+    <div class="shots">
+      <div class="shot"><span class="caption">WHAT THE DRONE SEES</span><img src="assets/raw-frame.png" alt="Raw aerial drone frame of an intersection"></div>
+      <div class="shot"><span class="caption">WHAT THE OPERATOR SEES</span><img src="assets/console-main-nice.png" alt="Nice Robotics operator console: fused, geolocated live picture"></div>
+    </div>
+    <div class="caption src-note">SAME SCENE · SAME MOMENT · REAL DRONE DATA (SONGDO TRAFFIC · CC BY 4.0)</div>
+    <div class="privacy caption">NO FACIAL RECOGNITION &nbsp;·&nbsp; NO INTERCEPTION &nbsp;·&nbsp; <span class="a">A HUMAN MAKES EVERY CALL</span></div>
+  </div>
+</section>
+
+<!-- CLOSE -->
+<section class="close">
+  <div class="wrap">
+    <div class="nice"><span class="a">N</span>AVIGATE &nbsp;·&nbsp; <span class="a">I</span>DENTIFY &nbsp;·&nbsp; <span class="a">C</span>OORDINATE &nbsp;·&nbsp; <span class="a">E</span>SCALATE</div>
+    <h1>Continuous coverage. One clear picture.<br><span class="a">Still a human decision.</span></h1>
+    <a class="cta" href="mailto:founders@nicerobotics.ai">REQUEST A BRIEFING &nbsp;·&nbsp; <span class="a">founders@nicerobotics.ai</span></a>
+  </div>
+</section>
+
+<footer>
+  <span>EST. 2026</span>
+  <span>© 2026 NICE ROBOTICS</span>
+</footer>
+
+</body>
+</html>
