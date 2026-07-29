@@ -112,11 +112,11 @@
   @media (prefers-reduced-motion:reduce){ .sweep::before{ animation:none; } }
   .stamps{ display:flex; gap:10px; flex-wrap:wrap; padding:14px 18px; border-top:1px solid var(--line); }
   .stamp{ font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1.5px; color:var(--muted);
-    border:1px solid var(--line); padding:7px 10px; opacity:0; transform:translateY(8px);
-    transition:opacity .6s ease, transform .6s ease; }
+    border:1px solid var(--line); padding:7px 10px; opacity:.35;
+    transition:opacity .6s ease; }
   .stamp b{ color:var(--text); }
   .stamp.alert{ border-color:rgba(255,87,87,.45); color:var(--alert); }
-  [data-beat="3"] .stamp, [data-beat="4"] .stamp{ opacity:1; transform:none; }
+  [data-beat="3"] .stamp, [data-beat="4"] .stamp{ opacity:1; }
   [data-beat="3"] .stamp:nth-child(2), [data-beat="4"] .stamp:nth-child(2){ transition-delay:.25s; }
   [data-beat="3"] .stamp:nth-child(3), [data-beat="4"] .stamp:nth-child(3){ transition-delay:.5s; }
   .map-note{ margin-top:12px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--dim); text-align:right; }
