@@ -151,8 +151,8 @@
   .tab-btn.active::before{background:var(--dc,var(--accent))}
   .tabpane{display:none;padding:44px}
   .tabpane.active{display:grid;grid-template-columns:1.2fr 1fr;gap:52px;align-items:center}
-  @media(max-width:960px){.tabs{flex-direction:column}.tab-btn{border-right:none;border-bottom:1px solid var(--line)}
-    .tab-btn:last-child{border-bottom:none}.tabpane{padding:24px}}
+  @media(max-width:960px){.tabpane{padding:24px}.tabpane.active{grid-template-columns:1fr;gap:30px}}
+  @media(max-width:760px){.tab-btn .tab-l{display:none}.tab-btn{padding:15px 8px;font-size:11px;letter-spacing:.14em}}
   .tabpane .steps-col{display:flex;flex-direction:column;justify-content:center;gap:34px}
   .tstep{display:flex;gap:20px}
   .tstep .sn{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.14em;color:var(--accent);
@@ -334,9 +334,9 @@
     </div>
     <div class="tabbox reveal">
     <div class="tabs" role="tablist">
-      <button class="tab-btn c-secure active" data-tab="secure" role="tab">Secure · Nice Security</button>
-      <button class="tab-btn c-map" data-tab="map" role="tab">Map · Nice Reality</button>
-      <button class="tab-btn c-inspect" data-tab="inspect" role="tab">Inspect · Nice Inspect</button>
+      <button class="tab-btn c-secure active" data-tab="secure" role="tab">Secure<span class="tab-l"> · Nice Security</span></button>
+      <button class="tab-btn c-map" data-tab="map" role="tab">Map<span class="tab-l"> · Nice Reality</span></button>
+      <button class="tab-btn c-inspect" data-tab="inspect" role="tab">Inspect<span class="tab-l"> · Nice Inspect</span></button>
     </div>
 
     <div class="tabpane active reveal c-secure" id="pane-secure">
