@@ -3,6 +3,21 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>
+// An opened folding phone has a nearly square screen that is no wider than a phone.
+// Give it the desktop layout scaled to fit, and put the phone layout back when it is folded.
+(function(){
+  var vp = document.querySelector('meta[name="viewport"]'), now = '';
+  function fit(){
+    var a = Math.min(screen.width, screen.height), b = Math.max(screen.width, screen.height);
+    var open = a >= 440 && a < 720 && b / a < 1.7;
+    var want = open ? 'width=1100' : 'width=device-width, initial-scale=1.0';
+    if(want !== now){ now = want; vp.setAttribute('content', want); }
+  }
+  fit();
+  window.addEventListener('resize', fit);
+})();
+</script>
 <title>Nice Robotics - Home</title>
 <link rel="icon" type="image/png" href="assets/favicon.png" />
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
@@ -249,6 +264,7 @@
   }
   @media(max-width:560px){
     :root{--pad:16px}
+    .hero{padding:calc(var(--navh) + 12px) 0 116px}   /* on a short screen the buttons must stop above the status lines */
     body{font-size:16px}
     .brand-logo{height:26px}
     .btn{padding:12px 16px;letter-spacing:.1em}
