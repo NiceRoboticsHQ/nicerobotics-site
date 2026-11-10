@@ -129,6 +129,8 @@
     background:rgba(10,10,12,.78);backdrop-filter:blur(8px);font-family:"Space Mono",monospace;font-size:9px;letter-spacing:.14em;color:var(--muted);line-height:1.6}
   .ov-card b{display:block;color:var(--gold);font-weight:400;font-size:10px}
   .ov-card .ov-s{color:var(--text)}
+  .ov-card.top{top:10px;bottom:auto;max-width:calc(100% - 24px)}
+  .ov-tag.low{top:auto;bottom:10px}
   .ov-tag{position:absolute;z-index:3;top:10px;right:12px;font-family:"Space Mono",monospace;font-size:9px;letter-spacing:.16em;color:var(--muted);
     background:rgba(10,10,12,.6);padding:3px 7px;max-width:70%;text-align:right;line-height:1.5}
 
@@ -190,9 +192,9 @@
   .lap .screen{border-radius:5px 5px 0 0}
   .lap .base{height:14px;margin:0 -3%;background:linear-gradient(180deg,#2c2c34,#141418);border-radius:0 0 14px 14px;box-shadow:0 24px 48px rgba(0,0,0,.55);position:relative}
   .lap .base::after{content:"";position:absolute;left:44%;right:44%;top:0;height:3px;background:#0b0b0e;border-radius:0 0 4px 4px}
-  /* tablet: iPad landscape, 4:3 screen */
+  /* tablet: iPad landscape, the 11-inch screen shape */
   .dev-tablet{right:0;top:36%;width:44%;padding:2.4%;background:#141418;border-radius:18px}
-  .dev-tablet .screen{aspect-ratio:4/3;height:auto;border-radius:6px}
+  .dev-tablet .screen{aspect-ratio:2360/1640;height:auto;border-radius:6px}
   /* phone: iPhone, 9:19.5 screen */
   .dev-phone{left:42%;bottom:-14%;width:17.5%;padding:1.6%;background:#141418;border-radius:12%/5.6%}
   .dev-phone .screen{aspect-ratio:9/19.5;height:auto;border-radius:10%/4.7%}
@@ -321,9 +323,9 @@
       </article>
       <article class="cap reveal">
         <div class="stage-video">
-          <canvas id="cv-intel" aria-label="An abstract view of a site: traffic moving as usual, then one stop where nothing usually stops gets raised"></canvas>
-          <div class="ov-card" id="ov-intel"><b>USUAL</b><span class="ov-s">Learned from the site itself</span></div>
-          <div class="ov-tag">ILLUSTRATION</div>
+          <video id="vd-intel" muted loop playsinline preload="metadata" poster="assets/pillar-intel-poster.jpg" src="assets/pillar-intel.mp4" aria-label="A screen recording of our phone app: a building site in 3D with every change between two surveys marked, the largest one measured at 1,265 cubic metres removed, then a before and after divider dragged across it"></video>
+          <div class="ov-card top" id="ov-intel"><b>MEASURED</b><span class="ov-s">The largest change, in 3D</span></div>
+          <div class="ov-tag low">APP RECORDING</div>
         </div>
         <div class="cap-body">
           <h3>Intelligence.</h3>
@@ -332,9 +334,9 @@
       </article>
       <article class="cap reveal">
         <div class="stage-video">
-          <canvas id="cv-act" aria-label="An abstract view of a site: a raised moment, one of our robots moving to it, and a crew member joining it"></canvas>
-          <div class="ov-card" id="ov-act"><b>ACTION ITEM</b><span class="ov-s">Raised</span></div>
-          <div class="ov-tag">ILLUSTRATION</div>
+          <video id="vd-act" muted loop playsinline preload="metadata" poster="assets/pillar-action-poster.jpg" src="assets/pillar-action.mp4" aria-label="A screen recording of our phone app: an area marked on the 3D site, a survey flight planned over it, the robot flying it, and the volumes measured inside the area"></video>
+          <div class="ov-card top" id="ov-act"><b>ACTION ITEM</b><span class="ov-s">Robot surveying the area</span></div>
+          <div class="ov-tag low">SIMULATED FLIGHT</div>
         </div>
         <div class="cap-body">
           <h3>Action.</h3>
@@ -437,10 +439,10 @@
     <div class="prod reveal">
       <div class="prod-half">
         <div class="prod-body">
-          <div class="devices" aria-label="The operator console on a laptop, a site report on a tablet, and the app on a phone">
+          <div class="devices" aria-label="The operator console on a laptop, and our app on a tablet and on a phone">
             <div class="lap"><div class="dev"><div class="screen"><img src="assets/screen-laptop.jpg" alt="The operator console: the live 3D twin with streets shaded by activity" loading="lazy" /></div></div><div class="base"></div></div>
-            <div class="dev dev-tablet"><div class="screen"><img src="assets/screen-tablet.jpg" alt="The site report: ranked findings for one week with before and after evidence" loading="lazy" /></div></div>
-            <div class="dev dev-phone"><div class="screen"><img src="assets/screen-phone.jpg" alt="The phone app: cameras live, moments today, and what is left to review" loading="lazy" /></div></div>
+            <div class="dev dev-tablet"><div class="screen"><img src="assets/screen-tablet.jpg" alt="Our app on a tablet: the changes between two surveys ranked in a list, beside the site in 3D with each change marked" loading="lazy" /></div></div>
+            <div class="dev dev-phone"><div class="screen"><img src="assets/screen-phone.jpg" alt="Our app on a phone: an area marked on the 3D site, and the volumes measured inside it" loading="lazy" /></div></div>
           </div>
         </div>
         <div class="prod-text">
@@ -545,207 +547,37 @@
     document.querySelectorAll('video').forEach(function(v){ vio.observe(v); });
   }
 
-  // the two illustrations: one abstract site, drawn on canvas, nothing from a real deployment
+  // the Intelligence and Action clips are screen recordings of the phone app.
+  // The line on each card follows the 3D shots and steps aside when the app's own panel is on screen.
   (function(){
-    var GOLD = '230,193,92', CYAN = '77,195,255', GREEN = '126,224,163', INK = '244,243,239';
-    function Scene(canvas, mode, card){
-      this.c = canvas; this.ctx = canvas.getContext('2d'); this.mode = mode; this.card = card;
-      this.w = 0; this.h = 0; this.t0 = null; this.raf = null; this.on = false; this.lastStatus = '';
-      // lanes: y for east-west, x for north-south (fractions of the frame)
-      this.H = [.56, .62]; this.V = [.40, .46];
-      this.agents = [];
-      var i;
-      for(i = 0; i < 9; i++) this.agents.push({ax:'h', lane:i%2, p:(i/9 + .03*i)%1, s:.055 + (i%3)*.012, kind:'v'});
-      for(i = 0; i < 7; i++) this.agents.push({ax:'v', lane:i%2, p:(i/7 + .05*i)%1, s:.05 + (i%2)*.014, kind:'v'});
-      for(i = 0; i < 6; i++) this.agents.push({ax:'h', lane:2, p:(i/6)%1, s:.016 + (i%2)*.004, kind:'p'});
-      this.resize();
+    function follow(videoId, cardId, cues){
+      var v = document.getElementById(videoId), card = document.getElementById(cardId);
+      if(!v || !card) return;
+      var last = null;
+      function paint(){
+        var t = v.currentTime, cue = cues[0], i;
+        for(i = 0; i < cues.length; i++){ if(t >= cues[i][0]) cue = cues[i]; }
+        if(cue === last) return; last = cue;
+        card.hidden = !cue[1];
+        if(cue[1]){ card.firstChild.textContent = cue[1]; card.lastChild.textContent = cue[2]; }
+      }
+      v.addEventListener('timeupdate', paint);
+      v.addEventListener('seeked', paint);
+      v.addEventListener('play', paint);
     }
-    Scene.prototype.resize = function(){
-      var r = this.c.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1);
-      if(!r.width) return;
-      this.w = r.width; this.h = r.height;
-      this.c.width = Math.round(r.width * d); this.c.height = Math.round(r.height * d);
-      this.ctx.setTransform(d, 0, 0, d, 0, 0);
-    };
-    Scene.prototype.cycle = function(){ return this.mode === 'intel' ? 13000 : 15000; };
-    Scene.prototype.frame = function(ts){
-      if(!this.on){ this.raf = null; return; }
-      if(this.t0 === null) this.t0 = ts;
-      var t = ((ts - this.t0) % this.cycle()) / 1000;
-      this.draw(t);
-      this.raf = requestAnimationFrame(this.frame.bind(this));
-    };
-    Scene.prototype.start = function(){ this.on = true; if(!this.raf){ this.t0 = null; this.raf = requestAnimationFrame(this.frame.bind(this)); } };
-    Scene.prototype.stop = function(){ this.on = false; };
-    Scene.prototype.status = function(head, body){
-      if(!this.card) return;
-      var s = head + '|' + body; if(s === this.lastStatus) return; this.lastStatus = s;
-      this.card.innerHTML = '<b></b><span class="ov-s"></span>';
-      this.card.firstChild.textContent = head; this.card.lastChild.textContent = body;
-    };
-    function ease(x){ return x < 0 ? 0 : x > 1 ? 1 : x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3)/2; }
-    function clamp01(x){ return x < 0 ? 0 : x > 1 ? 1 : x; }
-    Scene.prototype.drawSite = function(a){
-      var x = this.ctx, w = this.w, h = this.h;
-      x.clearRect(0, 0, w, h);
-      // blocks
-      x.fillStyle = 'rgba(255,255,255,.028)';
-      var B = [[.04,.10,.26,.34],[.56,.08,.36,.36],[.06,.72,.24,.22],[.58,.74,.30,.20],[.34,.10,.14,.34]];
-      B.forEach(function(b){ x.fillRect(b[0]*w, b[1]*h, b[2]*w, b[3]*h); });
-      x.strokeStyle = 'rgba(255,255,255,.06)'; x.lineWidth = 1;
-      B.forEach(function(b){ x.strokeRect(b[0]*w + .5, b[1]*h + .5, b[2]*w, b[3]*h); });
-      // roads
-      x.fillStyle = 'rgba(255,255,255,.035)';
-      x.fillRect(0, .52*h, w, .14*h);
-      x.fillRect(.36*w, 0, .14*w, h);
-      // the usual: soft glow along both roads, breathing a little
-      var g = .10 + .04*Math.sin(a*1.3);
-      var grd = x.createLinearGradient(0, .52*h, 0, .66*h);
-      grd.addColorStop(0, 'rgba(' + CYAN + ',0)'); grd.addColorStop(.5, 'rgba(' + CYAN + ',' + g + ')'); grd.addColorStop(1, 'rgba(' + CYAN + ',0)');
-      x.fillStyle = grd; x.fillRect(0, .52*h, w, .14*h);
-      var grd2 = x.createLinearGradient(.36*w, 0, .50*w, 0);
-      grd2.addColorStop(0, 'rgba(' + CYAN + ',0)'); grd2.addColorStop(.5, 'rgba(' + CYAN + ',' + g + ')'); grd2.addColorStop(1, 'rgba(' + CYAN + ',0)');
-      x.fillStyle = grd2; x.fillRect(.36*w, 0, .14*w, h);
-      // lane marks
-      x.strokeStyle = 'rgba(255,255,255,.07)'; x.setLineDash([10, 14]);
-      x.beginPath(); x.moveTo(0, .59*h); x.lineTo(w, .59*h); x.moveTo(.43*w, 0); x.lineTo(.43*w, h); x.stroke(); x.setLineDash([]);
-      // cameras: four small marks with faint cones, so the twin reads as "built from cameras"
-      var cams = [[.30,.47,.9],[.52,.69,-2.2],[.33,.70,-.6],[.52,.47,2.4]];
-      var s = this;
-      cams.forEach(function(c){
-        x.save(); x.translate(c[0]*w, c[1]*h);
-        x.fillStyle = 'rgba(' + CYAN + ',.07)';
-        x.beginPath(); x.moveTo(0,0); x.arc(0, 0, .22*w, c[2] - .5, c[2] + .5); x.closePath(); x.fill();
-        x.fillStyle = 'rgba(' + CYAN + ',.9)'; x.beginPath(); x.arc(0, 0, 3, 0, 7); x.fill();
-        x.restore();
-      });
-    };
-    Scene.prototype.agentPos = function(ag){
-      var w = this.w, h = this.h;
-      if(ag.ax === 'h'){
-        var y = ag.lane === 2 ? .685*h : this.H[ag.lane]*h;
-        return [ (ag.lane === 1 ? 1 - ag.p : ag.p) * w, y ];
-      }
-      return [ this.V[ag.lane]*w, (ag.lane === 1 ? 1 - ag.p : ag.p) * h ];
-    };
-    Scene.prototype.drawAgents = function(dt, frozen){
-      var x = this.ctx, s = this;
-      this.agents.forEach(function(ag, i){
-        if(!(frozen && i === 0)) ag.p = (ag.p + ag.s*dt) % 1;
-        var pt = s.agentPos(ag);
-        if(ag.kind === 'p'){ x.fillStyle = 'rgba(' + INK + ',.55)'; x.beginPath(); x.arc(pt[0], pt[1], 2.2, 0, 7); x.fill(); return; }
-        x.fillStyle = 'rgba(' + CYAN + ',.85)';
-        if(ag.ax === 'h') x.fillRect(pt[0] - 7, pt[1] - 3, 14, 6); else x.fillRect(pt[0] - 3, pt[1] - 7, 6, 14);
-      });
-    };
-    Scene.prototype.ring = function(px, py, a, rgb, k){
-      var x = this.ctx; k = k || 1;
-      x.strokeStyle = 'rgba(' + rgb + ',' + (.9*(1 - a)) + ')'; x.lineWidth = 1.5;
-      x.beginPath(); x.arc(px, py, (8 + 26*a)*k, 0, 7); x.stroke();
-    };
-    Scene.prototype.marker = function(px, py, rgb, label){
-      var x = this.ctx;
-      x.fillStyle = 'rgba(' + rgb + ',1)'; x.beginPath(); x.arc(px, py, 4, 0, 7); x.fill();
-      x.font = '10px "Space Mono", monospace'; x.fillStyle = 'rgba(' + rgb + ',1)'; x.textBaseline = 'bottom';
-      var tw = x.measureText(label).width, left = px + 14 + tw > this.w - 12;   // flip the callout when it would run off the right edge
-      x.strokeStyle = 'rgba(' + rgb + ',.6)'; x.lineWidth = 1; x.beginPath(); x.moveTo(px, py - 6); x.lineTo(px, py - 30); x.lineTo(px + (left ? -10 : 10), py - 30); x.stroke();
-      x.textAlign = left ? 'right' : 'left';
-      x.fillText(label, px + (left ? -14 : 14), py - 32);
-      x.textAlign = 'left';
-    };
-    Scene.prototype.draw = function(t){
-      var w = this.w, h = this.h, x = this.ctx, last = this._last == null ? t : this._last;
-      var dt = t - last; if(dt < 0 || dt > .2) dt = 1/60; this._last = t;
-      this.drawSite(t);
-      var stopAg = this.agents[0];
-      if(this.mode === 'intel'){
-        // 0-4 usual. 4-5.5 one vehicle drifts to the shoulder and stops. 5.5-11 raised. 11-13 cleared.
-        var drift = ease((t - 4)/1.5), gone = ease((t - 11)/1.5);
-        var frozen = t > 4 && t < 12.5;
-        if(t > 4 && t < 4.05 + 1/30){ stopAg.p = .70; stopAg.lane = 0; }
-        this.drawAgents(dt, frozen);
-        if(t >= 4){
-          var pt = this.agentPos(stopAg), sy = pt[1] - 16*drift + 10*gone;
-          // redraw the one that stopped, on the shoulder
-          x.fillStyle = 'rgba(' + GOLD + ',' + (.6 + .4*drift) + ')';
-          x.fillRect(pt[0] - 7, sy - 3, 14, 6);
-          if(t > 5.5 && t < 11){
-            var a = ((t - 5.5) % 1.6)/1.6;
-            this.ring(pt[0], sy, a, GOLD); this.ring(pt[0], sy, (a + .5) % 1, GOLD);
-            this.marker(pt[0], sy, GOLD, 'STOPPED WHERE NOTHING STOPS');
-            this.status('RAISED', 'A stop where nothing stops at this hour');
-          } else if(t >= 11){
-            this.status('CLEARED', 'Back to usual');
-          } else {
-            this.status('USUAL', 'Learned from the site itself');
-          }
-        } else {
-          this.status('USUAL', 'Learned from the site itself');
-        }
-        return;
-      }
-      // action: 0-1 raised. 1-6 robot leaves the dock and travels. 6-9 on scene, view cone. 9-11 a crew member arrives. 11-13.5 resolved. then reset.
-      this.drawAgents(dt, true);
-      stopAg.p = .70; stopAg.lane = 0;
-      var tp = this.agentPos(stopAg), tx = tp[0], ty = tp[1] - 16;
-      var done = t > 11;
-      var col = done ? GREEN : GOLD;
-      x.fillStyle = 'rgba(' + col + ',1)'; x.fillRect(tx - 7, ty - 3, 14, 6);
-      if(!done){ var a2 = (t % 1.6)/1.6; this.ring(tx, ty, a2, GOLD); }
-      // dock
-      var dx = .86*w, dy = .20*h;
-      x.strokeStyle = 'rgba(' + GOLD + ',.5)'; x.lineWidth = 1; x.strokeRect(dx - 10, dy - 10, 20, 20);
-      x.font = '10px "Space Mono", monospace'; x.fillStyle = 'rgba(' + INK + ',.5)'; x.textBaseline = 'top'; x.fillText('DOCK', dx - 14, dy + 14);
-      // robot path: dock -> target, a gentle curve; back home after resolve
-      var go = ease((t - 1)/5), back = ease((t - 13.5)/1.5), p = go*(1 - back);
-      var cx = (dx + tx)/2 + .10*w, cy = (dy + ty)/2 - .18*h;
-      var rx = (1-p)*(1-p)*dx + 2*(1-p)*p*cx + p*p*tx, ry = (1-p)*(1-p)*dy + 2*(1-p)*p*cy + p*p*(ty - 34);
-      // trail
-      x.strokeStyle = 'rgba(' + GOLD + ',.25)'; x.setLineDash([3, 6]); x.beginPath();
-      for(var k = 0; k <= 20; k++){ var q = p*k/20, qx = (1-q)*(1-q)*dx + 2*(1-q)*q*cx + q*q*tx, qy = (1-q)*(1-q)*dy + 2*(1-q)*q*cy + q*q*(ty - 34); if(k === 0) x.moveTo(qx, qy); else x.lineTo(qx, qy); }
-      x.stroke(); x.setLineDash([]);
-      // view cone once on scene
-      if(t > 6 && t < 13.5){
-        var ca = Math.min(1, (t - 6)/.8);
-        x.fillStyle = 'rgba(' + GOLD + ',' + (.14*ca) + ')';
-        x.beginPath(); x.moveTo(rx, ry); x.lineTo(tx - 26*ca, ty + 8); x.lineTo(tx + 26*ca, ty + 8); x.closePath(); x.fill();
-      }
-      // the robot: a diamond
-      x.save(); x.translate(rx, ry); x.rotate(Math.PI/4);
-      x.fillStyle = 'rgba(' + GOLD + ',1)'; x.fillRect(-5, -5, 10, 10);
-      x.strokeStyle = 'rgba(' + GOLD + ',.45)'; x.lineWidth = 1; x.strokeRect(-9.5, -9.5, 19, 19);
-      x.restore();
-      // the crew member comes from the left edge along the sidewalk
-      if(t > 9){
-        var cp = ease((t - 9)/2.2), hx = (-.02 + cp*(tx/w - .03))*w, hy = .685*h - cp*(.685*h - (ty + 14));
-        x.fillStyle = 'rgba(' + INK + ',.95)'; x.beginPath(); x.arc(hx, hy, 3.2, 0, 7); x.fill();
-        x.strokeStyle = 'rgba(' + INK + ',.5)'; x.beginPath(); x.arc(hx, hy, 7, 0, 7); x.stroke();
-      }
-      this.marker(tx, ty, col, done ? 'RESOLVED' : (t > 6 ? 'ON SCENE' : 'RAISED'));
-      if(t < 1) this.status('ACTION ITEM', 'Raised');
-      else if(t < 6) this.status('ACTION ITEM', 'Robot dispatched, full site context on board');
-      else if(t < 9) this.status('ACTION ITEM', 'On scene, gathering what is missing');
-      else if(t < 11) this.status('ACTION ITEM', 'Your crew joins with the answer in hand');
-      else this.status('RESOLVED', 'Closed. The twin keeps going.');
-    };
-
-    var scenes = [];
-    var ci = document.getElementById('cv-intel'), ca = document.getElementById('cv-act');
-    if(ci) scenes.push(new Scene(ci, 'intel', document.getElementById('ov-intel')));
-    if(ca) scenes.push(new Scene(ca, 'act', document.getElementById('ov-act')));
-    if(!scenes.length) return;
-    function sizeAll(){ scenes.forEach(function(s){ s.resize(); if(reduce) s.draw(s.mode === 'intel' ? 7 : 7.5); }); }
-    window.addEventListener('resize', sizeAll);
-    sizeAll();
-    if(reduce) return;
-    var sio = new IntersectionObserver(function(es){
-      es.forEach(function(e){
-        var s = scenes.filter(function(k){ return k.c === e.target; })[0]; if(!s) return;
-        if(e.isIntersecting){ s.resize(); s.start(); } else { s.stop(); }
-      });
-    }, {threshold:.15});
-    scenes.forEach(function(s){ sio.observe(s.c); });
-    document.addEventListener('visibilitychange', function(){ scenes.forEach(function(s){ if(!document.hidden && s.on) s.start(); }); });
+    // seconds into each clip (tools/cut-pillar-clips.sh). A cue with no text hides the card.
+    follow('vd-intel', 'ov-intel', [
+      [0,   'WHAT CHANGED', 'Two surveys, every difference marked'],
+      [3.9, 'MEASURED',     'The largest change, in 3D'],
+      [5.8, '', '']
+    ]);
+    follow('vd-act', 'ov-act', [
+      [0,   'ACTION ITEM', 'Mark the area on the twin'],
+      [2.6, 'ACTION ITEM', 'Flight planned over it'],
+      [4.2, '', ''],
+      [6.1, 'ACTION ITEM', 'Robot surveying the area'],
+      [9.0, '', '']
+    ]);
   })();
 
   // deploy
